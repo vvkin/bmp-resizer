@@ -147,9 +147,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BMPReader.cpp" />
     <ClCompile Include="LAB_4.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BMPReader.h" />
     <ClInclude Include="BMP_struct.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
