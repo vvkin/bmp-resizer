@@ -4,13 +4,23 @@ BMPReader::BMPReader(const char* file_name) {
 	BMPReader::read(file_name);
 }
 
+BMPReader::BMPReader(uint32_t height, uint32_t width) {
+	header_info.height = height;
+	header_info.width = width;
+	change_padding();
+	calculate_capacities();
+	data.resize(header_info.width * header_info.height);
+	padd_vec.resize(padding, BMPPixel{ 0,0,0 });
+	header.file_size += (data.size() + padd_vec.size()) * sizeof(BMPPixel);
+}
+
 void BMPReader::read(const char* file_name) {
 
 	std::ifstream in(file_name, std::ios_base::binary);
 	in.read((char*)&header, sizeof(header));
 	in.read((char*)&header_info, sizeof(header_info));
-	//change_padding(); TODO : write method to calculate padding
-	//calculate_capacities(); and capacities
+	change_padding();
+	calculate_capacities();
 	data.resize(header_info.width * header_info.height);
 	padd_vec.resize(padding);
 	for (auto i = 0; i < header_info.height; ++i) {
