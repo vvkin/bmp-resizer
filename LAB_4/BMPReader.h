@@ -18,4 +18,10 @@ public:
     void resize(const char*, float);
 private:
     void read(const char*);
+    BMPPixel get_pixel(uint32_t, uint32_t);
+    void set_pixel(int32_t, int32_t, uint8_t, uint8_t, uint8_t);
+    float lerp(float, float, float);
+    float blerp(float, float, float, float, float, float);
+    void change_padding();
+    void calculate_capacities();
 };

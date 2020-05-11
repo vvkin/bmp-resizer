@@ -20,3 +20,22 @@ void BMPReader::read(const char* file_name) {
 	header.file_size += (data.size() + padd_vec.size() * header_info.height) * sizeof(BMPPixel);
 	in.close();
 }
+void BMPReader::change_padding() {
+	for (padding = 0; (header_info.width + padding) % 4 != 0; ++padding);
+}
+
+void BMPReader::calculate_capacities() {
+	header_info.size = sizeof(BMPInfoHeader);
+	header.offset_data = sizeof(BMPFileHeader) + sizeof(BMPInfoHeader);
+	header.file_size = header.offset_data;
+}
+void BMPReader::write(const char* file_name) {
+	std::ofstream out(file_name, std::ios_base::binary);
+	out.write((char*)&header, sizeof(header));
+	out.write((char*)&header_info, sizeof(header_info));
+	for (auto i = 0; i < header_info.height; ++i) {
+		out.write((char*)(data.data() + i * header_info.width), header_info.width * sizeof(BMPPixel));
+		out.write((char*)padd_vec.data(), padd_vec.size() * sizeof(BMPPixel));
+	}
+	out.close();
+}
