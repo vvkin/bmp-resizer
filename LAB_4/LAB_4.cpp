@@ -2,6 +2,6 @@
 
 int main(){
 	BMPReader bmp_file("img\\balls.bmp");
-	bmp_file.write("out.bmp");
+	bmp_file.resize("out.bmp", 10);
 }
 

@@ -67,3 +67,30 @@ float BMPReader::lerp(float a, float b, float c) {
 float BMPReader::blerp(float c00, float c10, float c01, float c11, float tx, float ty) {
 	return lerp(lerp(c00, c10, tx), lerp(c01, c11, tx), ty);
 }
+
+void BMPReader::resize(const char* new_file, float scale) {
+	int32_t new_height = (header_info.height * scale);
+	int32_t new_width = (header_info.width * scale);
+	new_width -= (new_width % 4 != 1) ? (new_width % 4) : 0;
+	BMPReader new_image(new_height, new_width);
+	for (auto x = 0; x < new_height; ++x) {
+		float gx = (float)x / (new_height) * (header_info.height - 1);
+		for (auto y = 0; y < new_width; ++y) {
+
+			float gy = (float)y / (new_width) * (header_info.width - 1);
+			int gxi = (int)gx;
+			int gyi = (int)gy;
+
+			BMPPixel c00 = get_pixel(gxi, gyi);
+			BMPPixel c10 = get_pixel(gxi + 1, gyi);
+			BMPPixel c01 = get_pixel(gxi, gyi + 1);
+			BMPPixel c11 = get_pixel(gxi + 1, gyi + 1);
+
+			uint8_t red = (uint8_t)blerp(c00.red, c10.red, c01.red, c11.red, gx - gxi, gy - gyi);
+			uint8_t green = (uint8_t)blerp(c00.green, c10.green, c01.green, c11.green, gx - gxi, gy - gyi);
+			uint8_t blue = (uint8_t)blerp(c00.blue, c10.blue, c01.blue, c11.blue, gx - gxi, gy - gyi);
+			new_image.set_pixel(x, y, red, green, blue);
+		}
+	}
+	new_image.write(new_file);
+}
