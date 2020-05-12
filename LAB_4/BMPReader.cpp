@@ -49,3 +49,21 @@ void BMPReader::write(const char* file_name) {
 	}
 	out.close();
 }
+BMPPixel BMPReader::get_pixel(uint32_t x, uint32_t y) {
+	return data[x * header_info.width + y];
+}
+
+void BMPReader::set_pixel(int32_t x, int32_t y, uint8_t redComponent, uint8_t greenComponent, uint8_t blueComponent) {
+	BMPPixel* toChange = &data[x * header_info.width + y];
+	toChange->red = redComponent;
+	toChange->green = greenComponent;
+	toChange->blue = blueComponent;
+}
+
+float BMPReader::lerp(float a, float b, float c) {
+	return a + c * (b - a);
+}
+
+float BMPReader::blerp(float c00, float c10, float c01, float c11, float tx, float ty) {
+	return lerp(lerp(c00, c10, tx), lerp(c01, c11, tx), ty);
+}
